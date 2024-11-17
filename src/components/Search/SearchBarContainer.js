@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import SearchBar from './SearchBar';
-import Spotify from './../../spotify/Spotify';
+import Spotify from '../../spotify/Spotify';
 
 function SearchBarContainer() {
     const [ input, setInput ] = useState('');
