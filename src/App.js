@@ -2,40 +2,45 @@
 import Header from './components/Header/Header';
 import SearchBarContainer from './components/Search/SearchBarContainer';
 import styles from './App.module.css'
-import Spotify from './spotify/spotify';
+import Spotify from './spotify/Spotify';
 import React, {useState, useEffect} from 'react';
+import AuthToken from './spotify/AuthToken';
+import ResetLocal from './components/ResetLocal';
 
 function App() {
-  let spotify;
 
-  useEffect(() => {
-      async function createSpotify() {
-          let accessToken = localStorage.getItem('access_token');
-          if (!accessToken || accessToken === 'undefined') {
-            console.log('New spotify');
-            const codeChallenge = await Spotify.encrypt_codes();
-            spotify = new Spotify();
-            spotify.authorize(codeChallenge);
+    useEffect(() => {
+        async function authSpotify() {
             const urlParams = new URLSearchParams(window.location.search);
             let code = urlParams.get('code');
-            await spotify.updateToken(code);
-          } else {
-            console.log('Old spotify');
-            spotify = new Spotify(accessToken);
-          }
-      };
-      console.log('Use effect');
+            if (code) {
+            await Spotify.updateToken(code);
+            const url = new URL(window.location.href);
+            url.searchParams.delete("code");
 
-      createSpotify();
-      console.log(spotify);
-  }, []);
+            const updatedUrl = url.search ? url.href : url.href.replace('?', '');
+            window.history.replaceState({}, document.title, updatedUrl);
+            } else {
+            await Spotify.authorize();
+            }
+        };
+        console.log('Use effect');
 
-  return (
-    <div className={styles.App}>
-      <Header />
-      <SearchBarContainer />
-    </div>
-  );
+        if (!AuthToken.accessToken) {
+            authSpotify();
+        } else {
+            console.log(`Token: ${AuthToken.accessToken}`);
+            console.log(`Expires: ${AuthToken.expires}`);
+        }
+    }, []);
+
+    return (
+        <div className={styles.App}>
+            <Header />
+            <ResetLocal />
+            <SearchBarContainer />
+        </div>
+    );
 }
 
 export default App;
