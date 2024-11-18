@@ -1,11 +1,11 @@
 // import './App.css';
 import Header from './components/Header/Header';
-import SearchBarContainer from './components/Search/SearchBarContainer';
+import SearchBarContainer from './features/Search/SearchBarContainer';
 import styles from './App.module.css'
 import Spotify from './spotify/Spotify';
 import React, {useState, useEffect} from 'react';
 import AuthToken from './spotify/AuthToken';
-import ResetLocal from './components/ResetLocal';
+import ResetLocal from './features/ResetLocal';
 
 function App() {
 

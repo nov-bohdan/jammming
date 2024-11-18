@@ -3,7 +3,7 @@ const AuthToken = {
     get expires() { return localStorage.getItem('expires') || null },
     get refreshToken() { return localStorage.getItem('refresh_token') || null },
     
-    save(response) {
+    save: function(response) {
         const { access_token, expires_in, refresh_token } = response;
         const now = new Date();
         const expireDate = new Date(now.getTime() + (expires_in * 1000));

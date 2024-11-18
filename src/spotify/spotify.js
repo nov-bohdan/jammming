@@ -62,10 +62,15 @@ class Spotify {
     }
 
     static async search(query) {
-        const types = ["album", "artist", "playlist", "track", "show", "episode", "audiobook"];
-        const url = ENDPOINT + '/search' + '?q=' + query + '&type=' + types.join(',')
-        const response = await fetch(url);
-        console.log(response);
+        const types = ["track"];
+        const url = ENDPOINT + 'search' + '?q=' + query + '&type=' + types.join(',')
+        const response = await fetch(url, {
+            headers: {
+                Authorization: 'Bearer ' + AuthToken.accessToken
+            }
+        });
+        const jsonResponse = await response.json();
+        console.log(JSON.stringify(jsonResponse));
     }
 }
 

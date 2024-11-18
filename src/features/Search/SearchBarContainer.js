@@ -9,8 +9,10 @@ function SearchBarContainer() {
         setInput(target.value);
     };
 
-    function onSubmitHandler() {
-        // const response = await Spotify.search(input);
+    async function onSubmitHandler(event) {
+        event.preventDefault();
+        console.log('Submitting');
+        const response = await Spotify.search(input);
     }
 
     return (

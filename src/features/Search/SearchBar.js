@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './SearchBar.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import SearchButton from './SearchButton';
 
 function SearchBar({onInputChange, input, onSubmit}) {
     return (
@@ -18,7 +17,7 @@ function SearchBar({onInputChange, input, onSubmit}) {
                 />
                 <FontAwesomeIcon icon={faMagnifyingGlass} className={styles.faIcon}/>
             </div>
-            <SearchButton />
+            <button type="submit" className={styles.searchButton}>Search</button>
         </form>
         </>
     );
