@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import SearchBar from './SearchBar';
-import Spotify from '../../spotify/Spotify';
+import React, {useState} from 'react';
+import SearchBar from './components/SearchBar/SearchBar';
 
-function SearchBarContainer() {
+function SearchBarContainer({ onSearch }) {
     const [ input, setInput ] = useState('');
 
     function onInputChangeHandler({target}) {
@@ -12,7 +11,7 @@ function SearchBarContainer() {
     async function onSubmitHandler(event) {
         event.preventDefault();
         console.log('Submitting');
-        const response = await Spotify.search(input);
+        await onSearch(input);
     }
 
     return (

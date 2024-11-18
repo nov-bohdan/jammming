@@ -1,11 +1,11 @@
 // import './App.css';
 import Header from './components/Header/Header';
-import SearchBarContainer from './features/Search/SearchBarContainer';
 import styles from './App.module.css'
 import Spotify from './spotify/Spotify';
 import React, {useState, useEffect} from 'react';
 import AuthToken from './spotify/AuthToken';
 import ResetLocal from './features/ResetLocal';
+import SearchFuture from './features/Search/SearchFeature';
 
 function App() {
 
@@ -38,7 +38,7 @@ function App() {
         <div className={styles.App}>
             <Header />
             <ResetLocal />
-            <SearchBarContainer />
+            <SearchFuture />
         </div>
     );
 }
