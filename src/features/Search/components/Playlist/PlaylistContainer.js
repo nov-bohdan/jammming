@@ -1,11 +1,10 @@
 import React, {useState} from "react";
 import Playlist from "./Playlist";
 
-function PlaylistContainer() {
-    const [ playlistSongs, setPlaylistSongs ] = useState([]);
+function PlaylistContainer({ playlistTracks }) {
 
     return (
-        <Playlist playlistSongs={playlistSongs} />
+        <Playlist playlistTracks={playlistTracks} />
     );
 }
 

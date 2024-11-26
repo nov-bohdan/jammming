@@ -6,7 +6,8 @@ import PlaylistContainer from "./components/Playlist/PlaylistContainer";
 import styles from './SearchFuture.module.css';
 
 function SearchFuture() {
-    const [searchResults, setSearchResults] = useState([]);
+    const [ searchResults, setSearchResults ] = useState(null);
+    const [ playlistTracks, setPlaylistTracks ] = useState([]);
 
     function getSearchResults() {
         console.log(searchResults);
@@ -19,12 +20,21 @@ function SearchFuture() {
         });
     }
 
+    function handleAddToPlaylist(target) {
+        const targetingId = target.dataset.trackid;
+        console.log(`Adding: ${targetingId}`);
+        setPlaylistTracks(prevPlayList => {
+            return [...prevPlayList, searchResults.trackList.find(track => track.id === targetingId)];
+        });
+        target.innerHTML = '✓';
+    }
+
     return (
         <>
             <SearchBarContainer onSearch={handleSearch} />
             <div className={styles.mainContent}>
-                <ResultsContainer trackListObject={searchResults} />
-                <PlaylistContainer />
+                <ResultsContainer trackListObject={searchResults} onAddHandle={handleAddToPlaylist} />
+                <PlaylistContainer playlistTracks={playlistTracks} />
             </div>
             <button onClick={getSearchResults}>Get results</button>
         </>
