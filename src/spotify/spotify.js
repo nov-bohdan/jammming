@@ -1,8 +1,9 @@
 import AuthToken from "./AuthToken";
+import TrackListObject from './TrackListObject'
 
 const ENDPOINT = "https://api.spotify.com/v1/";
-const SPOTIFY_CLIENT_ID = "140d5ddf148c49c98494fc00b48bf206";
-const redirectUri = 'http://localhost:3000/';
+const SPOTIFY_CLIENT_ID = "4bf33f8b9bda4fabb80e1bcc510b375f";
+const redirectUri = 'http://localhost:3000';
 const authUrl = new URL("https://accounts.spotify.com/authorize");
 const scope = 'user-read-private user-read-email';
 
@@ -61,16 +62,22 @@ class Spotify {
         window.location.href = authUrl.toString(); // Redirect the user to the authorization server for login
     }
 
-    static async search(query) {
+    static search(query) {
         const types = ["track"];
         const url = ENDPOINT + 'search' + '?q=' + query + '&type=' + types.join(',')
-        const response = await fetch(url, {
+        return fetch(url, {
             headers: {
                 Authorization: 'Bearer ' + AuthToken.accessToken
             }
-        });
-        const jsonResponse = await response.json();
-        console.log(JSON.stringify(jsonResponse));
+        })
+        .then(response => {
+            return response.json()
+        })
+        .then(jsonResponse => {
+            // console.log(`Response: ${JSON.stringify(jsonResponse)}`);
+            const spotifyTracks = new TrackListObject(jsonResponse.tracks);
+            return spotifyTracks;
+        })
     }
 }
 

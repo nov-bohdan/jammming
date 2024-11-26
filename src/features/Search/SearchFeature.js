@@ -1,18 +1,28 @@
 import React, { useState } from "react";
-import SearchBarContainer from "./SearchBarContainer";
+import SearchBarContainer from "./components/SearchBar/SearchBarContainer";
 import Spotify from "../../spotify/Spotify";
-import SpotifyTracks from "../../spotify/SpotifyTracks";
+import ResultsContainer from "./components/SearchResults/SearchResults";
 
 function SearchFuture() {
-    const [searchResults, setSearchResults] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
 
-    async function handleSearch(input) {
-        const response = await Spotify.search(input);
-        setSearchResults(response);
+    function getSearchResults() {
+        console.log(searchResults);
+    }
+
+    function handleSearch(input) {
+        Spotify.search(input)
+        .then(spotifyTracks => {
+            setSearchResults(spotifyTracks);
+        });
     }
 
     return (
-        <SearchBarContainer onSearch={handleSearch} />
+        <>
+            <SearchBarContainer onSearch={handleSearch} />
+            <ResultsContainer trackListObject={searchResults} />
+            <button onClick={getSearchResults}>Get results</button>
+        </>
     );
 }
 

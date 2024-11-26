@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import SearchBar from './components/SearchBar/SearchBar';
+import SearchBar from './SearchBar';
 
 function SearchBarContainer({ onSearch }) {
     const [ input, setInput ] = useState('');
