@@ -5,6 +5,21 @@
     border-radius: 20px;
 }
 
+.track {
+    color: white;
+    border-bottom: 1px solid white;
+    margin-bottom: 5px;
+    padding: 5px 20px 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 h2 {
-color: white;
+    color: white;
+}
+
+.removeButton {
+    width: 25px;
+    height: 25px;
 }
