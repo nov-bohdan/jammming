@@ -1,11 +1,14 @@
 import React from 'react';
+import styles from './Track.module.css';
 
 function Track({ trackObject }) {
     return (
-        <div>
-            <p id="track-name">{trackObject.name}</p>
-            <p id="album-name">Album: {trackObject.albumName}</p>
-            <p id="artist-names">{trackObject.artistsName.join(', ')}</p>
+        <div className={styles.track}>
+            <div className={styles.trackData}>
+                <p id="track-name">{trackObject.name}</p>
+                <span id={styles.artistNames}>{trackObject.artistsName.join(', ')}</span> | <span id={styles.albumName}>{trackObject.albumName}</span>
+            </div>
+            <button className={styles.addButton}>+</button>
         </div>
     );
 }

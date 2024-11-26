@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SearchBarContainer from "./components/SearchBar/SearchBarContainer";
 import Spotify from "../../spotify/Spotify";
 import ResultsContainer from "./components/SearchResults/SearchResults";
+import styles from './SearchFuture.module.css';
 
 function SearchFuture() {
     const [searchResults, setSearchResults] = useState([]);
@@ -20,7 +21,9 @@ function SearchFuture() {
     return (
         <>
             <SearchBarContainer onSearch={handleSearch} />
-            <ResultsContainer trackListObject={searchResults} />
+            <div className={styles.mainContent}>
+                <ResultsContainer trackListObject={searchResults} />
+            </div>
             <button onClick={getSearchResults}>Get results</button>
         </>
     );
