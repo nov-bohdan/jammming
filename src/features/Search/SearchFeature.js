@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SearchBarContainer from "./components/SearchBar/SearchBarContainer";
 import Spotify from "../../spotify/Spotify";
 import SearchResults from "./components/SearchResults/SearchResults";
-import PlaylistContainer from "./components/Playlist/PlaylistContainer";
+import Playlist from "./components/Playlist/Playlist";
 import styles from './SearchFuture.module.css';
 
 function SearchFuture({ userId }) {
@@ -64,7 +64,7 @@ function SearchFuture({ userId }) {
             <SearchBarContainer onSearch={handleSearch} />
             <div className={styles.mainContent}>
                 <SearchResults trackList={searchResults} onAddHandle={handleAddToPlaylist} />
-                <PlaylistContainer
+                <Playlist
                     playlistName={playlistName} 
                     playlistTracks={playlistTracks} 
                     onRemoveHandle={handleRemoveFromPlaylist} 
