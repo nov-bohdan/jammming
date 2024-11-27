@@ -6,6 +6,22 @@ const redirectUri = 'http://localhost:3000';
 const authUrl = new URL("https://accounts.spotify.com/authorize");
 const scope = "playlist-read-private, playlist-modify-private, playlist-modify-public, user-read-private, user-read-email";
 
+class SpotifyError extends Error {
+    constructor(message, status, data) {
+        super(message);
+        this.name = 'SpotifyError';
+        this.status = status;
+        this.data = data;
+    }
+}
+
+class SpotifyAuthError extends SpotifyError {
+    constructor(message, status, data) {
+        super(message, status, data);
+        this.name = 'SpotifyAuthError';
+    }
+}
+
 class Spotify {
     static async addTracksToPlaylist(playlistId, uris) {
         const url = ENDPOINT + `playlists/${playlistId}/tracks`;
@@ -19,14 +35,12 @@ class Spotify {
                 uris
             })
         });
-        if (response.ok) {
-            const responseJson = await response.json();
-            return responseJson.snapshot_id;
-        } else {
+        if (!response.ok) {
             const responseText = await response.text();
-            console.log(responseText);
-            return responseText;
+            throw new SpotifyError('Error adding tracks to playlist', response.status, responseText);
         }
+        const responseJson = await response.json();
+        return responseJson.snapshot_id;
     }
 
     static async createPlaylist(userId, name) {
@@ -43,14 +57,12 @@ class Spotify {
                 public: false
             })
         });
-        if (response.ok) {
-            const responseJson = await response.json();
-            return responseJson.id;
-        } else {
+        if (!response.ok) {
             const responseText = await response.text();
-            console.log(responseText);
-            return responseText;
+            throw new SpotifyError('Error creating a playlist', response.status, responseText);
         }
+        const responseJson = await response.json();
+        return responseJson.id;
     }
 
     static async getUserProfile() {
@@ -60,6 +72,10 @@ class Spotify {
                 Authorization: 'Bearer ' + AuthToken.accessToken
             }
         });
+        if (!response.ok) {
+            const responseText = await response.text();
+            throw new SpotifyError('Error getting user\'s profile', response.status, responseText);
+        }
         return await response.json();
     }
 
@@ -90,10 +106,14 @@ class Spotify {
             }),
         }
 
-        const body = await fetch(url, payload);
-        const response = await body.json();
-        console.log(`Response: ${JSON.stringify(response)}`);
-        AuthToken.save(response);
+        const response = await fetch(url, payload);
+        if (!response.ok) {
+            const responseText = await response.text();
+            throw new SpotifyAuthError('Error updating token', response.status, responseText);
+        }
+        const responseJson = await response.json();
+        console.log(`Response: ${JSON.stringify(responseJson)}`);
+        AuthToken.save(responseJson);
     }
 
     static async authorize() {
@@ -125,20 +145,20 @@ class Spotify {
         window.location.href = authUrl.toString(); // Redirect the user to the authorization server for login
     }
 
-    static search(query) {
+    static async search(query) {
         const types = ["track"];
         const url = ENDPOINT + 'search' + '?q=' + query + '&type=' + types.join(',')
-        return fetch(url, {
+        const response = await fetch(url, {
             headers: {
                 Authorization: 'Bearer ' + AuthToken.accessToken
             }
-        })
-        .then(response => {
-            return response.json()
-        })
-        .then(jsonResponse => {
-            return jsonResponse.tracks;
-        })
+        });
+        if (!response.ok) {
+            const responseText = await response.text();
+            throw new SpotifyError('Error performing search', response.status, responseText);
+        }
+        const responseJson = await response.json();
+        return responseJson.tracks;
     }
 }
 

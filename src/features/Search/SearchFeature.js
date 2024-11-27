@@ -6,7 +6,7 @@ import Playlist from "./components/Playlist/Playlist";
 import styles from './SearchFuture.module.css';
 import PlaylistContainer from "./components/Playlist/PlaylistContainer";
 
-function SearchFuture({ userId }) {
+function SearchFuture({ userId, openModal }) {
     const [ searchResults, setSearchResults ] = useState([]);
     const [ playlistTracks, setPlaylistTracks ] = useState([]);
     const [ playlistName, setPlaylistName ] = useState('Playlist name');
@@ -17,22 +17,9 @@ function SearchFuture({ userId }) {
         console.log(searchResults);
     }
 
-    function handleSearch(input) {
-        Spotify.search(input)
-        .then(spotifyTracks => {
-            const trackList = spotifyTracks.items.map(track => {
-                const { id, href, name, preview_url, uri, artists, album } = track;
-                const artistsName = artists.map(artist => artist.name);
-                const albumName = album.name;
-                return { id, href, name, preview_url, uri, artistsName, albumName };
-            });
-            setSearchResults(trackList);
-        });
-    }
-
     return (
         <>
-            <SearchBarContainer onSearch={handleSearch} />
+            <SearchBarContainer setSearchResults={setSearchResults} />
             <div className={styles.mainContent}>
                 <SearchResults 
                     searchResults={searchResults} 
@@ -48,6 +35,7 @@ function SearchFuture({ userId }) {
                     setPlaylistName={setPlaylistName}
                     setSpotifyPlaylistID={setSpotifyPlaylistID}
                     setSpotifySnapshotID={setSpotifySnapshotID}
+                    openModal={openModal}
                 />
             </div>
             <button onClick={getSearchResults}>Get results</button>

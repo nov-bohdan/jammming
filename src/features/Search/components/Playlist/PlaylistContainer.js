@@ -2,7 +2,7 @@ import React from "react";
 import Playlist from "./Playlist";
 import Spotify from "../../../../spotify/Spotify";
 
-function PlaylistContainer({ playlistTracks, playlistName, userId, setPlaylistTracks, setSearchResults, setPlaylistName, setSpotifyPlaylistID, setSpotifySnapshotID }) {
+function PlaylistContainer({ playlistTracks, playlistName, userId, setPlaylistTracks, setSearchResults, setPlaylistName, setSpotifyPlaylistID, setSpotifySnapshotID, openModal }) {
     function handleRemoveFromPlaylist(target) {
         const targetingId = target.dataset.trackid;
         console.log(`Removing: ${targetingId}`);
@@ -14,16 +14,20 @@ function PlaylistContainer({ playlistTracks, playlistName, userId, setPlaylistTr
         setPlaylistName(target.value);
     }
 
-    function handleSaveToSpotify() {
+    async function handleSaveToSpotify() {
         // Saving playlist to spotify
-        Spotify.createPlaylist(userId, playlistName)
-        .then(playlistId => {
+        try {
+            const playlistId = await Spotify.createPlaylist(userId, playlistName)
             setSpotifyPlaylistID(playlistId);
-            return Spotify.addTracksToPlaylist(playlistId, playlistTracks.map(track => track.uri))
-        })
-        .then(snapshotId => {
+            const snapshotId = await Spotify.addTracksToPlaylist(playlistId, playlistTracks.map(track => track.uri))
             setSpotifySnapshotID(snapshotId);
-        });
+            openModal(`New playlist created!\nPlaylistID: ${playlistId}\nSnapshotID: ${snapshotId}`);
+        } catch (error) {
+            console.log(error.message);
+            console.log(error.status);
+            console.log(error.data);
+            openModal(error.message + "\n" + error.status + "\n" + error.data);
+        }
     }
 
 
