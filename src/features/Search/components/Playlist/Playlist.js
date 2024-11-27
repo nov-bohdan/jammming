@@ -3,19 +3,17 @@ import styles from "./Playlist.module.css";
 import Track from "../Track/Track";
 import SavePlaylist from "./SavePlaylist";
 
-function Playlist({ playlistTracks, onRemoveHandle, playlistName, onInputChange }) {
+function Playlist({ playlistTracks, onRemoveHandle, playlistName, onInputChange, onSaveHandle }) {
     function onClick(event) {
         event.preventDefault();
         onRemoveHandle(event.target);
     }
 
-    playlistTracks = playlistTracks || [];
-
     return (
         <div className={styles.playlist}>
             <form>
                 <div className={styles.inputContainer}>
-                    <span class="icon" style={{marginRight: 10}}>✏️</span>
+                    <span style={{marginRight: 10}}>✏️</span>
                     <input type="text" name="playlistName" value={playlistName} id={styles.playlistName} onChange={onInputChange} />
                 </div>
             </form>
@@ -27,7 +25,7 @@ function Playlist({ playlistTracks, onRemoveHandle, playlistName, onInputChange 
                 </div>
             ))}
 
-            <SavePlaylist />
+            <SavePlaylist onSaveHandle={onSaveHandle} />
         </div>
     )
 }

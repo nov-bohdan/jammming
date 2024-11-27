@@ -4,9 +4,72 @@ const ENDPOINT = "https://api.spotify.com/v1/";
 const SPOTIFY_CLIENT_ID = "4bf33f8b9bda4fabb80e1bcc510b375f";
 const redirectUri = 'http://localhost:3000';
 const authUrl = new URL("https://accounts.spotify.com/authorize");
-const scope = 'user-read-private user-read-email';
+const scope = "playlist-read-private, playlist-modify-private, playlist-modify-public, user-read-private, user-read-email";
 
 class Spotify {
+    static async addTracksToPlaylist(playlistId, uris) {
+        const url = ENDPOINT + `playlists/${playlistId}/tracks`;
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                Authorization: 'Bearer ' + AuthToken.accessToken,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                uris
+            })
+        });
+        if (response.ok) {
+            const responseJson = await response.json();
+            return responseJson.snapshot_id;
+        } else {
+            const responseText = await response.text();
+            console.log(responseText);
+            return responseText;
+        }
+    }
+
+    static async createPlaylist(userId, name) {
+        const url = ENDPOINT + `users/${userId}/playlists`;
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                Authorization: 'Bearer ' + AuthToken.accessToken,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name,
+                description: "Test playlist",
+                public: false
+            })
+        });
+        if (response.ok) {
+            const responseJson = await response.json();
+            return responseJson.id;
+        } else {
+            const responseText = await response.text();
+            console.log(responseText);
+            return responseText;
+        }
+    }
+
+    static async getUserProfile() {
+        const url = ENDPOINT + "me";
+        const response = await fetch(url, {
+            headers: {
+                Authorization: 'Bearer ' + AuthToken.accessToken
+            }
+        });
+        return await response.json();
+    }
+
+    static async getUserId() {
+        console.log('getting user id');
+        const userProfile = await this.getUserProfile();
+        const userId = userProfile.id;
+        return userId;
+    }
+
     static async updateToken(code) {
         // stored in the previous step
         let codeVerifier = localStorage.getItem('code_verifier');
@@ -15,14 +78,15 @@ class Spotify {
         const payload = {
             method: 'POST',
             headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: new URLSearchParams({
-            client_id: SPOTIFY_CLIENT_ID,
-            grant_type: 'authorization_code',
-            code,
-            redirect_uri: redirectUri,
-            code_verifier: codeVerifier,
+                client_id: SPOTIFY_CLIENT_ID,
+                grant_type: 'authorization_code',
+                code,
+                redirect_uri: redirectUri,
+                code_verifier: codeVerifier,
+                scope
             }),
         }
 
@@ -51,7 +115,7 @@ class Spotify {
         const params = {
           response_type: 'code',
           client_id: SPOTIFY_CLIENT_ID,
-          scope: scope,
+          scope,
           code_challenge_method: 'S256',
           code_challenge: code_challenge_base64,
           redirect_uri: redirectUri,

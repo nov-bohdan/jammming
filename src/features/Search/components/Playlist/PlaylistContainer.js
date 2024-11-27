@@ -1,15 +1,16 @@
 import React, {useState} from "react";
 import Playlist from "./Playlist";
 
-function PlaylistContainer({ playlistTracks, onRemoveHandle }) {
-    const [ playlistName, setPlaylistName ] = useState('Playlist name');
-    function onInputChange({target}) {
-        setPlaylistName(target.value);
-    }
-
+function PlaylistContainer({ playlistTracks, onRemoveHandle, onInputChange, playlistName, onSaveHandle }) {
     return (
         <>
-            <Playlist playlistTracks={playlistTracks} onRemoveHandle={onRemoveHandle} onInputChange={onInputChange} playlistName={playlistName} />
+            <Playlist 
+                playlistTracks={playlistTracks} 
+                onRemoveHandle={onRemoveHandle} 
+                onInputChange={onInputChange} 
+                playlistName={playlistName} 
+                onSaveHandle={onSaveHandle}
+            />
         </>
     );
 }

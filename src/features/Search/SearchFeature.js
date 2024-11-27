@@ -5,9 +5,16 @@ import SearchResults from "./components/SearchResults/SearchResults";
 import PlaylistContainer from "./components/Playlist/PlaylistContainer";
 import styles from './SearchFuture.module.css';
 
-function SearchFuture() {
+function SearchFuture({ userId }) {
     const [ searchResults, setSearchResults ] = useState([]);
     const [ playlistTracks, setPlaylistTracks ] = useState([]);
+    const [ playlistName, setPlaylistName ] = useState('Playlist name');
+    const [ spotifyPlaylistID, setSpotifyPlaylistID ] = useState(null);
+    const [ spotifySnapshotID, setSpotifySnapshotID ] = useState(null);
+
+    function handlePlaylistNameChange({target}) {
+        setPlaylistName(target.value);
+    }
 
     function getSearchResults() {
         console.log(searchResults);
@@ -40,14 +47,34 @@ function SearchFuture() {
         setPlaylistTracks(prevPlayList => prevPlayList.filter(track => track.id !== targetingId));
     }
 
+    function handleSaveToSpotify() {
+        // Saving playlist to spotify
+        Spotify.createPlaylist(userId, playlistName)
+        .then(playlistId => {
+            setSpotifyPlaylistID(playlistId);
+            return Spotify.addTracksToPlaylist(playlistId, playlistTracks.map(track => track.uri))
+        })
+        .then(snapshotId => {
+            setSpotifySnapshotID(snapshotId);
+        });
+    }
+
     return (
         <>
             <SearchBarContainer onSearch={handleSearch} />
             <div className={styles.mainContent}>
                 <SearchResults trackList={searchResults} onAddHandle={handleAddToPlaylist} />
-                <PlaylistContainer playlistTracks={playlistTracks} onRemoveHandle={handleRemoveFromPlaylist} />
+                <PlaylistContainer
+                    playlistName={playlistName} 
+                    playlistTracks={playlistTracks} 
+                    onRemoveHandle={handleRemoveFromPlaylist} 
+                    onInputChange={handlePlaylistNameChange}
+                    onSaveHandle={handleSaveToSpotify}
+                />
             </div>
             <button onClick={getSearchResults}>Get results</button>
+            <p style={{color: 'white'}}>Playlist ID: {spotifyPlaylistID}</p>
+            <p style={{color: 'white'}}>Snapshot ID: {spotifySnapshotID}</p>
         </>
     );
 }
