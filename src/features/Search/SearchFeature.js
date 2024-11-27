@@ -4,6 +4,7 @@ import Spotify from "../../spotify/Spotify";
 import SearchResults from "./components/SearchResults/SearchResults";
 import Playlist from "./components/Playlist/Playlist";
 import styles from './SearchFuture.module.css';
+import PlaylistContainer from "./components/Playlist/PlaylistContainer";
 
 function SearchFuture({ userId }) {
     const [ searchResults, setSearchResults ] = useState([]);
@@ -11,10 +12,6 @@ function SearchFuture({ userId }) {
     const [ playlistName, setPlaylistName ] = useState('Playlist name');
     const [ spotifyPlaylistID, setSpotifyPlaylistID ] = useState(null);
     const [ spotifySnapshotID, setSpotifySnapshotID ] = useState(null);
-
-    function handlePlaylistNameChange({target}) {
-        setPlaylistName(target.value);
-    }
 
     function getSearchResults() {
         console.log(searchResults);
@@ -40,36 +37,20 @@ function SearchFuture({ userId }) {
         setSearchResults(prevSearchResults => prevSearchResults.filter(track => track.id !== targetingId));
     }
 
-    function handleRemoveFromPlaylist(target) {
-        const targetingId = target.dataset.trackid;
-        console.log(`Removing: ${targetingId}`);
-        setSearchResults(prevSearchResults => [playlistTracks.find(track => track.id === targetingId), ...prevSearchResults]);
-        setPlaylistTracks(prevPlayList => prevPlayList.filter(track => track.id !== targetingId));
-    }
-
-    function handleSaveToSpotify() {
-        // Saving playlist to spotify
-        Spotify.createPlaylist(userId, playlistName)
-        .then(playlistId => {
-            setSpotifyPlaylistID(playlistId);
-            return Spotify.addTracksToPlaylist(playlistId, playlistTracks.map(track => track.uri))
-        })
-        .then(snapshotId => {
-            setSpotifySnapshotID(snapshotId);
-        });
-    }
-
     return (
         <>
             <SearchBarContainer onSearch={handleSearch} />
             <div className={styles.mainContent}>
                 <SearchResults trackList={searchResults} onAddHandle={handleAddToPlaylist} />
-                <Playlist
-                    playlistName={playlistName} 
-                    playlistTracks={playlistTracks} 
-                    onRemoveHandle={handleRemoveFromPlaylist} 
-                    onInputChange={handlePlaylistNameChange}
-                    onSaveHandle={handleSaveToSpotify}
+                <PlaylistContainer
+                    playlistTracks={playlistTracks}
+                    playlistName={playlistName}
+                    userId={userId}
+                    setPlaylistTracks={setPlaylistTracks}
+                    setSearchResults={setSearchResults}
+                    setPlaylistName={setPlaylistName}
+                    setSpotifyPlaylistID={setSpotifyPlaylistID}
+                    setSpotifySnapshotID={setSpotifySnapshotID}
                 />
             </div>
             <button onClick={getSearchResults}>Get results</button>
