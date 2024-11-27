@@ -30,18 +30,15 @@ function SearchFuture({ userId }) {
         });
     }
 
-    function handleAddToPlaylist(target) {
-        const targetingId = target.dataset.trackid;
-        console.log(`Adding: ${targetingId}`);
-        setPlaylistTracks(prevPlayList => [...prevPlayList, searchResults.find(track => track.id === targetingId)]);
-        setSearchResults(prevSearchResults => prevSearchResults.filter(track => track.id !== targetingId));
-    }
-
     return (
         <>
             <SearchBarContainer onSearch={handleSearch} />
             <div className={styles.mainContent}>
-                <SearchResults trackList={searchResults} onAddHandle={handleAddToPlaylist} />
+                <SearchResults 
+                    searchResults={searchResults} 
+                    setPlaylistTracks={setPlaylistTracks}
+                    setSearchResults={setSearchResults}
+                />
                 <PlaylistContainer
                     playlistTracks={playlistTracks}
                     playlistName={playlistName}
