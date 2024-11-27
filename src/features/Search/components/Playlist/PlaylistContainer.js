@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import Playlist from "./Playlist";
 
-function PlaylistContainer({ playlistTracks }) {
+function PlaylistContainer({ playlistTracks, onRemoveHandle }) {
 
     return (
-        <Playlist playlistTracks={playlistTracks} />
+        <Playlist playlistTracks={playlistTracks} onRemoveHandle={onRemoveHandle} />
     );
 }
 

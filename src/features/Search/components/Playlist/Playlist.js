@@ -2,10 +2,10 @@ import React from "react"
 import styles from "./Playlist.module.css";
 import Track from "../Track/Track";
 
-function Playlist({ playlistTracks }) {
+function Playlist({ playlistTracks, onRemoveHandle }) {
     function onClick(event) {
         event.preventDefault();
-        // onAddHandle(event.target);
+        onRemoveHandle(event.target);
     }
 
     playlistTracks = playlistTracks || [];

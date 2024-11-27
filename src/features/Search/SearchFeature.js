@@ -33,12 +33,19 @@ function SearchFuture() {
         setSearchResults(prevSearchResults => prevSearchResults.filter(track => track.id !== targetingId));
     }
 
+    function handleRemoveFromPlaylist(target) {
+        const targetingId = target.dataset.trackid;
+        console.log(`Removing: ${targetingId}`);
+        setSearchResults(prevSearchResults => [playlistTracks.find(track => track.id === targetingId), ...prevSearchResults]);
+        setPlaylistTracks(prevPlayList => prevPlayList.filter(track => track.id !== targetingId));
+    }
+
     return (
         <>
             <SearchBarContainer onSearch={handleSearch} />
             <div className={styles.mainContent}>
                 <SearchResults trackList={searchResults} onAddHandle={handleAddToPlaylist} />
-                <PlaylistContainer playlistTracks={playlistTracks} />
+                <PlaylistContainer playlistTracks={playlistTracks} onRemoveHandle={handleRemoveFromPlaylist} />
             </div>
             <button onClick={getSearchResults}>Get results</button>
         </>
