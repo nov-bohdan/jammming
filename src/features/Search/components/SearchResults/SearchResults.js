@@ -2,11 +2,7 @@ import React from 'react';
 import TrackList from '../TrackList/TrackList';
 import styles from './SearchResults.module.css';
 
-function ResultsContainer({ trackListObject, onAddHandle }) {
-    let trackList = [];
-    if (trackListObject) {
-        trackList = trackListObject.trackList || [];
-    }
+function SearchResults({ trackList, onAddHandle }) {
     return (
         <div className={styles.searchResults}>
             <h2>Results</h2>
@@ -15,4 +11,4 @@ function ResultsContainer({ trackListObject, onAddHandle }) {
     );
 }
 
-export default ResultsContainer;
+export default SearchResults;

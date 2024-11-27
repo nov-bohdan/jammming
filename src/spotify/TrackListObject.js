@@ -13,6 +13,14 @@ class TrackListObject {
     get trackList() {
         return this._trackList;
     }
+
+    removeTrackById(id) {
+        this._trackList = this._trackList.filter(track => track.id !== id);
+    }
+
+    getTrackById(id) {
+        return this._trackList.find(track => track.id === id);
+    }
 }
 
 export default TrackListObject;

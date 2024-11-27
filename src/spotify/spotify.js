@@ -1,5 +1,4 @@
 import AuthToken from "./AuthToken";
-import TrackListObject from './TrackListObject'
 
 const ENDPOINT = "https://api.spotify.com/v1/";
 const SPOTIFY_CLIENT_ID = "4bf33f8b9bda4fabb80e1bcc510b375f";
@@ -74,9 +73,7 @@ class Spotify {
             return response.json()
         })
         .then(jsonResponse => {
-            // console.log(`Response: ${JSON.stringify(jsonResponse)}`);
-            const spotifyTracks = new TrackListObject(jsonResponse.tracks);
-            return spotifyTracks;
+            return jsonResponse.tracks;
         })
     }
 }

@@ -8,6 +8,8 @@ function Playlist({ playlistTracks }) {
         // onAddHandle(event.target);
     }
 
+    playlistTracks = playlistTracks || [];
+
     return (
         <div className={styles.playlist}>
             <h2>Playlist</h2>
