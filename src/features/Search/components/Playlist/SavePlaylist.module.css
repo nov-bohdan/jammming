@@ -1,0 +1,10 @@
+.saveButton {
+    padding: 10px 25px;
+    background-color: purple;
+    color: white;
+    font-size: 20px;
+    margin: 15px auto;
+    border: none;
+    border-radius: 10px;
+    display: block;
+}
